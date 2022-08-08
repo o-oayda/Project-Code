@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import healpy as hp
 import numpy as np
 from numpy import cross, eye, dot
@@ -19,6 +20,7 @@ from dynesty import plotting as dyplot
 import multiprocess
 import matplotlib
 from matplotlib import rc
+import quaternion as quat
 
 ##### DEFINED FUNCTIONS #######
 
@@ -68,6 +70,23 @@ def unit_norm_vector(v1,v2):
 def rotateMatrix(axis,angle):
     rotatedMatrix = expm(cross(eye(3), axis/norm(axis)*angle))
     return rotatedMatrix
+
+def fastRotateMatrix(axis,theta):
+    # from top post in
+    # https://stackoverflow.com/questions/6802577/rotation-of-3d-vector
+    """
+    Return the rotation matrix associated with counterclockwise rotation about
+    the given axis by theta radians.
+    """
+    axis = np.asarray(axis)
+    axis = axis / math.sqrt(np.dot(axis, axis))
+    a = math.cos(theta / 2.0)
+    b, c, d = -axis * math.sin(theta / 2.0)
+    aa, bb, cc, dd = a * a, b * b, c * c, d * d
+    bc, ad, ac, ab, bd, cd = b * c, a * d, a * c, a * b, b * d, c * d
+    return np.array([[aa + bb - cc - dd, 2 * (bc + ad), 2 * (bd - ac)],
+                     [2 * (bc - ad), aa + cc - bb - dd, 2 * (cd + ab)],
+                     [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]])
 
 def wavelength_to_rgb(wavelength, gamma=0.8):
     '''This converts a given wavelength of light to an 
@@ -160,41 +179,40 @@ def wavelengthToRGB(obsLambda):
     RGBs = np.asarray(RGBs, dtype=np.float32)
     return RGBs
 
+def quaternionRotate(xi,yi,zi,rotAxes,deltaAngles):
+    vector = [xi,yi,zi] # might be an issue
+    
+    vector = np.array([0.] + vector)
+    rot_axis = np.array([0.] + rotAxes)
+    axis_angle = (deltaAngles*0.5) * rot_axis/np.linalg.norm(rot_axis)
+
+    vec = quat.quaternion(*vector)
+    qlog = quat.quaternion(*axis_angle)
+    q = np.exp(qlog)
+
+    v_prime = q * vec * np.conjugate(q)
+
+    v_prime_vec = v_prime.imag
+
+    return v_prime_vec
+
 def updatePoints(angles, obsSpeed, obsVector, xi, yi, zi):
     ## Now we try to congregate points along the source of motion due to abberation
     # angle difference
     rotatedPoints = np.zeros((len(xi),3))
     deltaAngles = -(abberation_angle(angles, obsSpeed) - angles)
     rotAxes = unit_norm_vector(np.asarray((xi,yi,zi)).T,obsVector) # turn points xi, yi, zi to array
+    
+    # for i in range(0,len(rotatedPoints)):
+    #     rotatedPoints[i] = quaternionRotate(xi[i], yi[i], zi[i], rotAxes[i], deltaAngles[i]) #reshape(len(xi), 1)
+    # return rotatedPoints
+
     for i in range(0, len(rotatedPoints)):
-        # print(i)
-        # deltaAngles = -(abberation_angle(angles[i], obsSpeed) - angles[i])
-        # print('here 1')
-        # rotAxes = unit_norm_vector((xi[i], yi[i], zi[i]), obsVector)
-        # print('here 2')
-        rotationMatrices = rotateMatrix(rotAxes[i],deltaAngles[i])
-        # print('here 3')
+        rotationMatrices = fastRotateMatrix(rotAxes[i],deltaAngles[i])
         rotatedPoints[i] = dot(rotationMatrices,(xi[i], yi[i], zi[i]))
-        # print('here 4')
+    
     rotatedPoints = np.asarray(rotatedPoints, dtype=np.float32)
     return rotatedPoints
-
-    # deltaAngles = []
-    # for i in range(0, len(angles)):
-    #     deltaAngles.append(-(abberation_angle(angles[i], obsSpeed) - angles[i]))
-    # # normal vector/rotation axes
-    # rotAxes = []
-    # for i in range(0, len(angles)):
-    #     rotAxes.append(unit_norm_vector((xi[i], yi[i], zi[i]), obsVector))
-    # rotationMatrices = []
-    # for i in range(0, len(rotAxes)):
-    #     rotationMatrices.append(rotateMatrix(rotAxes[i], deltaAngles[i]))
-    # rotatedPoints = []
-    # for i in range(0, len(rotationMatrices)):
-    #     rotatedPoints.append(dot(rotationMatrices[i], (xi[i], yi[i], zi[i])))
-    # rotatedPoints = np.asarray(rotatedPoints, dtype=np.float32)
-    # print('Points updated')
-    # return rotatedPoints
 
 def transformedPoints(obsSpeed,obsVector,restLambda,initialPointsVectors):
     angles = angle(initialPointsVectors,obsVector) # fine
@@ -323,6 +341,8 @@ def lnlike(Theta):
 
 ####### DETERMINING POINTS REQUIRED #########
 
+t0 = time.time()
+
 ### LaTeX Font for plotting ###
 rc('font', **{'family': 'sans-serif', 'sans-serif': ['Times-Roman']})
 rc('text', usetex=True)
@@ -333,15 +353,16 @@ matplotlib.rcParams['text.latex.preamble'] = [r"\usepackage{amsmath}"]
 
 restLambda = ang_freq_to_lambda(1)  # define ang_freq to be 1.
 obsSpeed = 0.001
-obsPolar = (0.7, 4)  # pol, az
+obsPolar = (0.7, 4)  # pol, az nominally 0.7,4
 observerVector = sph2cart(obsPolar)
 observerVector2 = np.asarray([observerVector])
 pol_true, az_true = obsPolar
 v_true = obsSpeed
-sigma = 0.1 # intrinsic uncertainty for each time-scale
+sigma = 0.3 # intrinsic uncertainty for each time-scale
 nside = 16 # defines pixel density of projection
 # range of points to iterate over
-points_range = np.linspace(5*10**5, 10**7, num=11).astype(int)
+# points_range = np.linspace(5*10**5, 10**7, num=11).astype(int)
+points_range = np.linspace(5*10**6, 20*10**6, num=16).astype(int)
 # (np.linspace(5*10**5, 10**7, num=11).astype(int)) # 500,000 to 10 million in increments of 950,000
 iteration = 0
 
@@ -354,104 +375,109 @@ cmb_evidence = np.zeros(len(points_range))
 #### Now determine evidences over a range of points
 
 for n in points_range:
-    
-    # sample points from spherical distribution
-    print('Sampling points, n = ' + str(n))
-    xi, yi, zi = sample_spherical(n)
-    initialPointsVectors = np.asarray([xi, yi, zi]).T
+    while True:
+        try:
+            # sample points from spherical distribution
+            print('Sampling points, n = ' + str(n))
+            xi, yi, zi = sample_spherical(n)
+            initialPointsVectors = np.asarray([xi, yi, zi]).T
 
-    # Apply abberation to points
-    print('Rotating points')
-    rotatedPoints, RGBs, obsLambda = transformedPoints(
-        obsSpeed, observerVector2, restLambda, initialPointsVectors)
+            # Apply abberation to points
+            print('Rotating points')
+            rotatedPoints, RGBs, obsLambda = transformedPoints(
+                obsSpeed, observerVector2, restLambda, initialPointsVectors)
+            print('Points rotated')
+            # Place time-scales on the sky and dilate depending on point
+            # rest frame tau values (unity for all points)
+            tau_true = np.ones(len(rotatedPoints))
+            rotatedPointVectors = np.asarray([rotatedPoints[0:len(
+                rotatedPoints), 0], rotatedPoints[0:len(rotatedPoints), 1], rotatedPoints[0:len(rotatedPoints), 2]]).T  # as above
+            alphaDash = angle(rotatedPointVectors, observerVector2)
+            tau_dilated = tau_true * \
+                (1-obsSpeed*np.cos(alphaDash)) / \
+                (np.sqrt(1-obsSpeed**2))  # time-dilated taus
 
-    # Place time-scales on the sky and dilate depending on point
-    # rest frame tau values (unity for all points)
-    tau_true = np.ones(len(rotatedPoints))
-    rotatedPointVectors = np.asarray([rotatedPoints[0:len(
-        rotatedPoints), 0], rotatedPoints[0:len(rotatedPoints), 1], rotatedPoints[0:len(rotatedPoints), 2]]).T  # as above
-    alphaDash = angle(rotatedPointVectors, observerVector2)
-    tau_dilated = tau_true * \
-        (1-obsSpeed*np.cos(alphaDash)) / \
-        (np.sqrt(1-obsSpeed**2))  # time-dilated taus
+            # Add measurement uncertainty to time-scales
+            tau_error = np.random.normal(loc=0, scale=sigma, size=len(tau_true))
+            tau_new = tau_dilated + tau_error  # actual measured time-scales in observer frame
+            observed_data = tau_new #???
+            tau_uncertainties = 0.1*np.ones(len(tau_new)) # uncertainty assumed to be 10%
 
-    # Add measurement uncertainty to time-scales
-    tau_error = np.random.normal(loc=0, scale=sigma, size=len(tau_true))
-    tau_new = tau_dilated + tau_error  # actual measured time-scales in observer frame
-    observed_data = tau_new #???
-    tau_uncertainties = 0.1*np.ones(len(tau_new)) # uncertainty assumed to be 10%
+            # Create pixels and average time-scales across pixels with pixelAverage function
+            npix = hp.nside2npix(nside)  # number of pixels
+            pixelVectors, m, a, hpx_map = pixelAverage(nside)
 
-    # Create pixels and average time-scales across pixels with pixelAverage function
-    npix = hp.nside2npix(nside)  # number of pixels
-    pixelVectors, m, a, hpx_map = pixelAverage(nside)
+            # Apply mask
+            theta = np.zeros(len(pixelVectors))
+            for i in range(0, len(pixelVectors)):
+                theta[i] = np.arccos(pixelVectors[i, 2]/math.sqrt(pixelVectors[i, 0]
+                    ** 2 + pixelVectors[i, 1]**2 + pixelVectors[i, 2]**2))
+            
+            # Set to 0 where inside mask
+            m[(theta >= np.deg2rad(60)) & (theta <= np.deg2rad(120))] = 0
+            a[(theta >= np.deg2rad(60)) & (theta <= np.deg2rad(120))] = 0
 
-    # Apply mask
-    theta = np.zeros(len(pixelVectors))
-    for i in range(0, len(pixelVectors)):
-        theta[i] = np.arccos(pixelVectors[i, 2]/math.sqrt(pixelVectors[i, 0]
-            ** 2 + pixelVectors[i, 1]**2 + pixelVectors[i, 2]**2))
-    
-    # Set to 0 where inside mask
-    m[(theta >= np.deg2rad(60)) & (theta <= np.deg2rad(120))] = 0
-    a[(theta >= np.deg2rad(60)) & (theta <= np.deg2rad(120))] = 0
+            # Remove masked pixels which have tau = 0 for model fitting
+            # the new pixels with mask applied are stored in m_new and a_new
+            a_new = a[m!=0]
+            m_new = m[m!=0]
+            pixelVectors = pixelVectors[np.where(m!= 0)]
+            tau_true_pixels = np.ones(npix)
+            tau_true_pixels = tau_true_pixels[np.where(m!= 0)]
 
-    # Remove masked pixels which have tau = 0 for model fitting
-    # the new pixels with mask applied are stored in m_new and a_new
-    a_new = a[m!=0]
-    m_new = m[m!=0]
-    pixelVectors = pixelVectors[np.where(m!= 0)]
-    tau_true_pixels = np.ones(npix)
-    tau_true_pixels = tau_true_pixels[np.where(m!= 0)]
+            # Fit parameters using dynesty and multiprocessing
+            with multiprocess.Pool(8) as pool:
+                dsampler = dynesty.DynamicNestedSampler(
+                lnlike, prior_transform, ndim=3, pool=pool, queue_size=8)
+                dsampler.run_nested()
+                dresults = dsampler.results
 
-    # Fit parameters using dynesty and multiprocessing
-    with multiprocess.Pool(8) as pool:
-        dsampler = dynesty.DynamicNestedSampler(
-        lnlike, prior_transform, ndim=3, pool=pool, queue_size=8)
-        dsampler.run_nested()
-        dresults = dsampler.results
+            # Plot and save cornerplot generated by dynesty
+            fig, axes = dyplot.cornerplot(dresults,
+                truths=[v_true,az_true,pol_true],
+                show_titles=True,
+                title_kwargs={'y': 1.04},
+                labels=['$v$','$\phi$','$\\theta$'],
+                title_fmt='.3f')
+            plt.savefig('Results/' + 'corner-n' + str(n) + '-nside' + str(nside) + '.pdf')
 
-    # Plot and save cornerplot generated by dynesty
-    fig, axes = dyplot.cornerplot(dresults,
-        truths=[v_true,az_true,pol_true],
-        show_titles=True,
-        title_kwargs={'y': 1.04},
-        labels=['$v$','$\phi$','$\\theta$'],
-        title_fmt='.3f')
-    plt.savefig('Results/' + 'corner-n' + str(n) + '-nside' + str(nside) + '.pdf')
+            # Fitted hypothesis
+            lnZ = dresults.logz[-1]
+            lnZ_err = dresults.logzerr[-1]
+            fitted_evidence[iteration] = lnZ
+            fitted_evidence_unc[iteration] = lnZ_err
+            print("log(Z) = {0:1.4f} ± {1:1.4}".format(lnZ, lnZ_err))
 
-    # Fitted hypothesis
-    lnZ = dresults.logz[-1]
-    lnZ_err = dresults.logzerr[-1]
-    fitted_evidence[iteration] = lnZ
-    fitted_evidence_unc[iteration] = lnZ_err
-    print("log(Z) = {0:1.4f} ± {1:1.4}".format(lnZ, lnZ_err))
+            # Null hypothesis
+            tau_val_null = 1
+            log_Z_0 = sum(sts.norm.logpdf(m_new, loc=tau_val_null, scale=a_new))
+            null_evidence[iteration] = log_Z_0
+            print("log(Z_0) = {0:1.1f}".format(log_Z_0))
 
-    # Null hypothesis
-    tau_val_null = 1
-    log_Z_0 = sum(sts.norm.logpdf(m_new, loc=tau_val_null, scale=a_new))
-    null_evidence[iteration] = log_Z_0
-    print("log(Z_0) = {0:1.1f}".format(log_Z_0))
+            # CMB hypothesis
+            pol, az, v = np.pi/2 - (48.253*np.pi/180), 264.021 * \
+            np.pi/180, (369.82*1000)/sc.c
+            CMBDipoleVector = sph2cart((pol, az))
+            CMBDipoleVector2 = np.asarray([CMBDipoleVector])
+            alphaDash_CMB = angle(pixelVectors, CMBDipoleVector2)
+            tau_val_CMB = tau_true_pixels * \
+                (1-v*np.cos(alphaDash_CMB))/(np.sqrt(1-v**2))
+            log_Z_CMB = sum(sts.norm.logpdf(m_new, loc=tau_val_CMB, scale=a_new))
+            cmb_evidence[iteration] = log_Z_CMB
+            print("log(Z_CMB) = {0:1.1f}".format(log_Z_CMB))
 
-    # CMB hypothesis
-    pol, az, v = np.pi/2 - (48.253*np.pi/180), 264.021 * \
-    np.pi/180, (369.82*1000)/sc.c
-    CMBDipoleVector = sph2cart((pol, az))
-    CMBDipoleVector2 = np.asarray([CMBDipoleVector])
-    alphaDash_CMB = angle(pixelVectors, CMBDipoleVector2)
-    tau_val_CMB = tau_true_pixels * \
-        (1-v*np.cos(alphaDash_CMB))/(np.sqrt(1-v**2))
-    log_Z_CMB = sum(sts.norm.logpdf(m_new, loc=tau_val_CMB, scale=a_new))
-    cmb_evidence[iteration] = log_Z_CMB
-    print("log(Z_CMB) = {0:1.1f}".format(log_Z_CMB))
+            ### Call plotting script to execute plots for this specific number of points
+            # currently don't want to generate any more plots...
+            # import plotting
 
-    ### Call plotting script to execute plots for this specific number of points
-    import plotting
+            # plotting.uncertaintyOnSkyPlot(nside,dresults,az_true,pol_true,n)
+            # plotting.numberCountHist(hpx_map,n)
+            # plotting.numberCountDensity(hpx_map,m,n)
 
-    plotting.uncertaintyOnSkyPlot(nside,dresults,az_true,pol_true,n)
-    plotting.numberCountHist(hpx_map,n)
-    plotting.numberCountDensity(hpx_map,m,n)
-
-    iteration += 1
+            iteration += 1
+            break
+        except ValueError:
+                pass
     
 # Unify evidences into dataframe after loop completion
 
@@ -460,3 +486,7 @@ df = pd.DataFrame(evidence_matrix,columns=['Points','ln(Z_0)','ln(Z_CMB)','ln(Z)
 df.to_csv('Results/evidences.csv')
 
 print(df)
+
+t1 = time.time()
+total_time = t1-t0
+print(total_time)
