@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 # from this guy https://stackoverflow.com/questions/56715139/latex-table-with-uncertainty-from-pandas-dataframe
 # from testing, this works as it should for errors
@@ -24,31 +25,62 @@ def conv2PlusMinus(val,err):
 
 
 # points_range = np.linspace(5*10**5, 10**7, num=11).astype(int)
-points_range = np.linspace(5*10**6, 20*10**6, num=16).astype(int)
+# points_range = np.linspace(5*10**6, 20*10**6, num=16).astype(int)
 
 # read in evidence csvs
-# df1 = pd.read_csv('Results/1-08-r1/evidences.csv')
-# df2 = pd.read_csv('Results/1-08-r2/evidences.csv')
-# df3 = pd.read_csv('Results/1-08-r3/evidences.csv')
-# df4 = pd.read_csv('Results/4-08-r2/evidences.csv')
-# df5 = pd.read_csv('Results/5-08/evidences.csv')
-# df6 = pd.read_csv('Results/5-08-r2/evidences.csv')
-# df7 = pd.read_csv('Results/5-08-r3/evidences.csv')
-# df8 = pd.read_csv('Results/5-08-r4/evidences.csv')
-# df9 = pd.read_csv('Results/5-08-r5/evidences.csv')
-# df10 = pd.read_csv('Results/5-08-r6/evidences.csv')
+# RESULTS1 10% uncertainty, obsPolar = (0.7, 4)
+df1 = pd.read_csv('Results/1-08-r1/evidences.csv')
+df2 = pd.read_csv('Results/1-08-r2/evidences.csv')
+df3 = pd.read_csv('Results/1-08-r3/evidences.csv')
+df4 = pd.read_csv('Results/4-08-r2/evidences.csv')
+df5 = pd.read_csv('Results/5-08/evidences.csv')
+df6 = pd.read_csv('Results/5-08-r2/evidences.csv')
+df7 = pd.read_csv('Results/5-08-r3/evidences.csv')
+df8 = pd.read_csv('Results/5-08-r4/evidences.csv')
+df9 = pd.read_csv('Results/5-08-r5/evidences.csv')
+df10 = pd.read_csv('Results/5-08-r6/evidences.csv')
 
+# RESULTS2 (np.pi/2, 400), 10% uncertainty
 # df1 = pd.read_csv('Results/7-08-r1/evidences.csv')
 # df2 = pd.read_csv('Results/7-08-r2/evidences.csv')
 # df3 = pd.read_csv('Results/7-08-r3/evidences.csv')
 # df4 = pd.read_csv('Results/7-08-r4/evidences.csv')
 # df5 = pd.read_csv('Results/7-08-r5/evidences.csv')
 
-df1 = pd.read_csv('Results/7-08-r6/evidences.csv')
-df2 = pd.read_csv('Results/8-08/evidences.csv')
-df3 = pd.read_csv('Results/8-08-r2/evidences.csv')
-df4 = pd.read_csv('Results/8-08-r3/evidences.csv')
-df5 = pd.read_csv('Results/8-08-r4/evidences.csv')
+# 30% uncertainty, `obsPolar = (0.7,4)`
+# df1 = pd.read_csv('Results/7-08-r6/evidences.csv')
+# df2 = pd.read_csv('Results/8-08/evidences.csv')
+# df3 = pd.read_csv('Results/8-08-r2/evidences.csv')
+# df4 = pd.read_csv('Results/8-08-r3/evidences.csv')
+# df5 = pd.read_csv('Results/8-08-r4/evidences.csv')
+
+# obsPolar = (np.pi - 0.7, 4 - np.pi), 0.01%
+points_range = np.linspace(10**6, 2*10**7, num=20).astype(int)
+# df1 = pd.read_csv('Results/15-08/evidences-trials1sigma0.01.csv')
+# df2 = pd.read_csv('Results/15-08/evidences-trials2sigma0.01.csv')
+# df3 = pd.read_csv('Results/15-08/evidences-trials3sigma0.01.csv')
+# df4 = pd.read_csv('Results/15-08/evidences-trials4sigma0.01.csv')
+# df5 = pd.read_csv('Results/15-08/evidences-trials5sigma0.01.csv')
+# df6 = pd.read_csv('Results/15-08/evidences-trials6sigma0.01.csv')
+# df7 = pd.read_csv('Results/15-08/evidences-trials7sigma0.01.csv')
+
+# df1 = pd.read_csv('Results/15-08/evidences-trials1sigma0.1.csv')
+# df2 = pd.read_csv('Results/15-08/evidences-trials2sigma0.1.csv')
+# df3 = pd.read_csv('Results/15-08/evidences-trials3sigma0.1.csv')
+# df4 = pd.read_csv('Results/15-08/evidences-trials4sigma0.1.csv')
+# df5 = pd.read_csv('Results/15-08/evidences-trials5sigma0.1.csv')
+
+# df1 = pd.read_csv('Results/15-08/evidences-trials1sigma0.3.csv')
+# df2 = pd.read_csv('Results/15-08/evidences-trials2sigma0.3.csv')
+# df3 = pd.read_csv('Results/15-08/evidences-trials3sigma0.3.csv')
+# df4 = pd.read_csv('Results/15-08/evidences-trials4sigma0.3.csv')
+# df5 = pd.read_csv('Results/15-08/evidences-trials5sigma0.3.csv')
+
+df1 = pd.read_csv('Results/15-08/evidences-trials1sigma0.5.csv')
+df2 = pd.read_csv('Results/15-08/evidences-trials2sigma0.5.csv')
+df3 = pd.read_csv('Results/15-08/evidences-trials3sigma0.5.csv')
+df4 = pd.read_csv('Results/15-08/evidences-trials4sigma0.5.csv')
+df5 = pd.read_csv('Results/15-08/evidences-trials5sigma0.5.csv')
 
 # combine dataframes
 total_frame = pd.concat([df1,df2,df3,df4,df5])
@@ -85,14 +117,19 @@ for i in range(0,len(bayes_cmb_fitted)):
 # determine mean and 1 sigma across trials for fitted, null and CMB hypotheses
 means_fitted = []
 devs_fitted = []
+fitted_evidence = []
 for i in range(0,len(df1['ln(Z)'])):
     means_fitted.append(np.mean((total_frame['ln(Z)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
+    fitted_evidence.append((total_frame['ln(Z)'])[i])
     devs_fitted.append(np.std((total_frame['ln(Z)'])[i]))
+
 
 means_cmb = []
 devs_cmb = []
+cmb_evidence = []
 for i in range(0,len(df1['ln(Z_CMB)'])):
     means_cmb.append(np.mean((total_frame['ln(Z_CMB)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
+    cmb_evidence.append((total_frame['ln(Z_CMB)'])[i])
     devs_cmb.append(np.std((total_frame['ln(Z_CMB)'])[i]))
 
 means_null = []
@@ -138,9 +175,21 @@ for i in range(0,len(fitted)):
 nice2 = np.c_[points_range,errors_fitted,errors_cmb,errors_null,factor_cmb_fitted,factor_fitted_null]
 
 results1 = (pd.DataFrame(nice2)) #instead of nice
-print(results1)
+# print(results1)
+print(fitted_evidence)
+print(cmb_evidence)
 
-with open('Results/table.tex','w') as tex_file:
+# plt.scatter(fitted_evidence[0],cmb_evidence[1])
+
+bayes_factor = fitted_evidence[0]-cmb_evidence[0]
+# print(bayes_factor)
+# print(cmb_evidence)
+# plt.scatter(cmb_evidence[0],bayes_factor)
+plt.show()
+
+# bayes factor vs log_cmb
+
+with open('Results/15-08/table-s0.5.tex','w') as tex_file:
        tex_file.write(results1.to_latex(
         na_rep='',
         index=False,
