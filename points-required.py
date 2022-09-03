@@ -358,7 +358,7 @@ matplotlib.rcParams['text.latex.preamble'] = [r"\usepackage{amsmath}"]
 
 restLambda = ang_freq_to_lambda(1)  # define ang_freq to be 1.
 obsSpeed = 0.001
-obsPolar = (np.pi - 0.7, 4 - np.pi)  # pol, az nominally 0.7,4
+obsPolar = (np.pi/2 - 30*np.pi/180, np.pi/2)  # pol, az nominally 0.7,4
 observerVector = sph2cart(obsPolar)
 observerVector2 = np.asarray([observerVector])
 pol_true, az_true = obsPolar

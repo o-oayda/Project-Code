@@ -10,10 +10,27 @@ This document describes the different parameters selected for each data trial.
 - 7-08 `obsPolar = (np.pi/2, 400)`, 10% uncertainty
 - 7-08-r6 up to 8-08-r4 30% uncertainty, `obsPolar = (0.7,4)`
 
-## Results fpr 8-08
+## Results for 8-08
 Results Table 1: 10%, (0.7,4)
 Results Table 2: 10%, (pi/2,4)
 Results Table 3: 30%, (0.7,4)
 
 ## New
 - 14-08: 1%, (0.7,4).
+- 15-08: 1%, 10%, 30%, 50% and (np.pi - 0.7, 4 - np.pi)
+- 22-08: 
+
+
+
+
+| Test | Characteristics | Files |
+|------|---|---|
+|Test A| $\sigma = 10\%$, `obsPolar = (0.7,4)` | |
+|Test B| $\sigma = 10\%$, `obsPolar = (np.pi/2,4)`| |
+|Test C| $\sigma = 30\%$, `obsPolar = (0.7,4)`| |
+|Test D| $\sigma = 1\%$, `obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
+|Test E| $\sigma = 10\%$, `obsPolar = obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
+|Test F| $\sigma = 30\%$, `obsPolar = obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
+|Test G| $\sigma = 50\%$, `obsPolar = obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
+
+Note: results1 = tableA; results2 = tableB; results3 = tableC
