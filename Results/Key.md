@@ -29,8 +29,11 @@ Results Table 3: 30%, (0.7,4)
 |Test B| $\sigma = 10\%$, `obsPolar = (np.pi/2,4)`| |
 |Test C| $\sigma = 30\%$, `obsPolar = (0.7,4)`| |
 |Test D| $\sigma = 1\%$, `obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
-|Test E| $\sigma = 10\%$, `obsPolar = obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
-|Test F| $\sigma = 30\%$, `obsPolar = obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
-|Test G| $\sigma = 50\%$, `obsPolar = obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
+|Test E| $\sigma = 10\%$, `obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
+|Test F| $\sigma = 30\%$, `obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
+|Test G| $\sigma = 50\%$, `obsPolar = (np.pi - 0.7, 4 - np.pi)`| |
+|Test H| $\sigma = 10\%$, `obsPolar = (np.pi/2 - 30*np.pi/180, np.pi/2)`| |
+|Test I| $\sigma = 30\%$, `obsPolar = (np.pi/2 - 30*np.pi/180, np.pi/2)`| |
+|Test J| $\sigma = 50\%$, `obsPolar = (np.pi/2 - 30*np.pi/180, np.pi/2)`| |
 
 Note: results1 = tableA; results2 = tableB; results3 = tableC

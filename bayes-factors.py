@@ -99,6 +99,27 @@ elif test_index == 'G':
         'Results/15-08/evidences-trials4sigma0.5.csv',
         'Results/15-08/evidences-trials4sigma0.5.csv']
 
+elif test_index == 'H':
+    test_files = [
+        'Results/22-08/evidences-trials1sigma0.1.csv',
+        'Results/22-08/evidences-trials2sigma0.1.csv',
+        'Results/22-08/evidences-trials3sigma0.1.csv',
+        'Results/22-08/evidences-trials4sigma0.1.csv',
+        'Results/22-08/evidences-trials5sigma0.1.csv']
+
+elif test_index == 'I':
+    test_files = [
+        'Results/22-08/evidences-trials1sigma0.3.csv',
+        'Results/22-08/evidences-trials2sigma0.3.csv',
+        'Results/22-08/evidences-trials3sigma0.3.csv',
+        'Results/22-08/evidences-trials4sigma0.3.csv',
+        'Results/22-08/evidences-trials5sigma0.3.csv']
+
+elif test_index == 'J':
+    test_files = [
+        'Results/22-08/evidences-trials1sigma0.5.csv',
+        'Results/22-08/evidences-trials2sigma0.5.csv']
+
 # combine dataframes
 frames = []
 for filename in test_files:
@@ -187,9 +208,24 @@ errors_null = []
 errors_cmb = []
 # errors_bayes = []
 for i in range(0,len(fitted)):
-    np.asarray(errors_fitted.append(conv2siunitx(fitted[i],devs_fitted[i])))
-    np.asarray(errors_null.append(conv2siunitx(null[i],devs_null[i])))
-    np.asarray(errors_cmb.append(conv2siunitx(cmb[i], devs_cmb[i])))
+    # np.asarray(errors_fitted.append(conv2siunitx(fitted[i],devs_fitted[i])))
+    # np.asarray(errors_null.append(conv2siunitx(null[i],devs_null[i])))
+    # np.asarray(errors_cmb.append(conv2siunitx(cmb[i], devs_cmb[i])))
+    errors_fitted.append(
+        conv2PlusMinus(
+            np.asarray(fitted[i]),
+            np.asarray(devs_fitted[i])))
+    
+    errors_null.append(
+        conv2PlusMinus(
+            np.asarray(null[i]),
+            np.asarray(devs_null[i])))
+
+    errors_cmb.append(
+        conv2PlusMinus(
+            np.asarray(cmb[i]),
+            np.asarray(devs_cmb[i])))
+
     # np.asarray(errors_bayes.append(conv2siunitx(bayes_factor[i],bayes_factor_uncertainty[i])))
 
 # print(errors_bayes)
@@ -217,10 +253,10 @@ with open('Results/' + str(table_name) + '.tex','w') as tex_file:
         na_rep='',
         index=False,
         header = ['{$N$}',"{$\ln \mathcal{Z}$}","{$\ln \mathcal{Z}_{\\text{CMB}}$}",'{$\ln \mathcal{Z}_0$}','{$\ln \left( \mathcal{Z} / {\mathcal{Z}_{\\text{CMB}}}\\right)$}','{$\ln \left( \mathcal{Z} / {\mathcal{Z}_{0}}\\right)$}'],
-        column_format='S[table-format=8,round-precision=0]S[table-format=3.3(1)e1]S[table-format=3.3(1)e1]S[table-format=3.3(1)e1]S[table-format=1(1),round-mode=uncertainty,round-precision=1]S[table-format=1(1),round-mode=uncertainty,round-precision=1]',
+        column_format='S[table-format=8,round-precision=0]S[table-format=6(3),round-mode=uncertainty,round-precision=1]S[table-format=6(3),round-mode=uncertainty,round-precision=1]S[table-format=6(3),round-mode=uncertainty,round-precision=1]S[table-format=1(1),round-mode=uncertainty,round-precision=1]S[table-format=1(1),round-mode=uncertainty,round-precision=1]',
         escape=False))
 
-# put table in standalone tex document then build
+# put table in standalone tex document
 with open("Results/" + str(filename) + ".tex", "w") as tex_file:
     tex_file.write(r"""
 \documentclass[varwidth=\maxdimen]{standalone}
@@ -242,6 +278,39 @@ with open("Results/" + str(filename) + ".tex", "w") as tex_file:
 
 \end{document}""")
 
-# change to results directory
+plt.figure()
+
+#  plot fitted to CMB Bayes factors
+plt.errorbar(
+    points_range,
+    bayes_cmb_fitted,
+    yerr=bayes_cmb_fitted_error,
+    label=r'$\ln ( \mathcal{Z} / {\mathcal{Z}_{CMB}} )$',
+    capsize=4,
+    markersize=5,
+    lw=1,
+    fmt='o')
+
+# plot fitted to null Bayes factors
+plt.errorbar(
+    points_range,
+    bayes_fitted_null,
+    yerr=bayes_fitted_null_error,
+    label=r'$\ln ( \mathcal{Z} / \mathcal{Z}_0 )$',
+    capsize=4,
+    markersize=5,
+    lw=1,
+    fmt='o')
+
+plt.xlabel('Number of Points')
+plt.ylabel('Log Bayes Factor')
+plt.grid(True)
+plt.legend()
+plt.title('Table ' + test_index + ' Bayes Factors')
+plt.savefig('Results/' + 'table-' + test_index + '-plot.pdf')
+
+plt.show()
+
+# change to results directory and build standalone tex document
 os.chdir('/Users/oliveroayda/Documents/GitHub/Project-Code/Results')
 os.system('pdflatex ' + str(filename) + '.tex')
