@@ -3,33 +3,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import time
-
-# from this guy https://stackoverflow.com/questions/56715139/latex-table-with-uncertainty-from-pandas-dataframe
-# from testing, this works as it should for errors
-# i.e. with err_points = 1, errors are rounded to 1.s.f.
-# which then sets the rounding for the actual mean value
-def conv2siunitx(val, err, err_points=1):
-    val = f'{val:.20e}'.split('e')
-    err = f'{err:.20e}'.split('e') 
-    first_uncertain = int(val[1]) - int(err[1]) + err_points
-
-    my_val = f'{np.round(float(val[0]), first_uncertain-1):.10f}'
-    my_err = f'{np.round(float(err[0]), err_points-1):.10f}'.replace('.','')
-    # Avoid 1. and write 1 instead
-    if first_uncertain > 1:
-        first_uncertain = first_uncertain + 1
-    # my addition to capture uncertainties greater than the value itself (hopefully)
-    elif first_uncertain == 0:
-        first_uncertain = 1
-    
-    #handle negative values which take up a position in the string
-    if my_val[:1] == '-':
-        return (f'{my_val[:first_uncertain+1]}({my_err[:err_points]})e{val[1]}')
-    else:
-        return(f'{my_val[:first_uncertain]}({my_err[:err_points]})e{val[1]}')
-
-def conv2PlusMinus(val,err):
-    return str(val) + ' \pm ' + str(err)
+from funcs import conv2PlusMinus, conv2siunitx
 
 test_index = input('Provide test index: ')
 
@@ -47,6 +21,7 @@ if test_index == 'A':
         'Results/5-08-r4/evidences.csv',
         'Results/5-08-r5/evidences.csv',
         'Results/5-08-r6/evidences.csv']
+
 elif test_index == 'B':
     # RESULTS2 (np.pi/2, 4), 10% uncertainty
     test_files = [
@@ -55,6 +30,7 @@ elif test_index == 'B':
         'Results/7-08-r3/evidences.csv',
         'Results/7-08-r4/evidences.csv',
         'Results/7-08-r5/evidences.csv']
+
 elif test_index == 'C':
     # 30% uncertainty, `obsPolar = (0.7,4)`
     test_files = [
@@ -62,7 +38,26 @@ elif test_index == 'C':
         'Results/8-08/evidences.csv',
         'Results/8-08-r2/evidences.csv',
         'Results/8-08-r3/evidences.csv',
-        'Results/8-08-r4/evidences.csv']
+        'Results/8-08-r4/evidences.csv',
+        'Results/26-09/evidences-trials1sigma0.3.csv',
+        'Results/26-09/evidences-trials2sigma0.3.csv', 
+        'Results/26-09/evidences-trials3sigma0.3.csv',
+        'Results/26-09/evidences-trials4sigma0.3.csv',
+        'Results/26-09/evidences-trials5sigma0.3.csv',
+        'Results/26-09/evidences-trials6sigma0.3.csv',
+        'Results/26-09/evidences-trials7sigma0.3.csv',
+        'Results/26-09/evidences-trials8sigma0.3.csv',
+        'Results/26-09/evidences-trials9sigma0.3.csv',
+        'Results/26-09/evidences-trials10sigma0.3.csv',
+        'Results/26-09/evidences-trials11sigma0.3.csv',
+        'Results/26-09/evidences-trials12sigma0.3.csv',
+        'Results/26-09/evidences-trials13sigma0.3.csv',
+        'Results/26-09/evidences-trials14sigma0.3.csv',
+        'Results/26-09/evidences-trials15sigma0.3.csv',
+        'Results/26-09/evidences-trials16sigma0.3.csv',
+        'Results/26-09/evidences-trials17sigma0.3.csv',
+        'Results/26-09/evidences-trials18sigma0.3.csv',
+        'Results/26-09/evidences-trials19sigma0.3.csv']
 
 # obsPolar = (np.pi - 0.7, 4 - np.pi), 0.01%
 elif test_index == 'D':

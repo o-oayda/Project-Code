@@ -15,7 +15,7 @@ npix = hp.nside2npix(nside)
 healpy_map = np.zeros(npix)
 
 tests_pol = [0.7, np.pi/2, np.pi-0.7, np.pi/2 - 30*np.pi/180]
-tests_az = [4,4,4-np.pi/2,np.pi/2]
+tests_az = [4,4,4-np.pi/2,np.pi/2,2.12]
 labels = ['']
 
 lon1 = (-np.pi,np.pi)
