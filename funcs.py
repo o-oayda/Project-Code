@@ -272,7 +272,7 @@ def transformedPoints(obsSpeed,obsVector,restLambda,initialPointsVectors,Doppler
 
 def cart2sph(obsVector):
     '''
-    Transform Cartesian coordinates to spherical coordinates given r = 1.
+    Transform Cartesian coordinates to spherical coordinates given r = 1 for theta between 0 and pi, and phi between -pi and pi. Return: (theta, phi).
     '''
     hxy = np.hypot(obsVector[0],obsVector[1])
     if obsVector[2] == 0:
@@ -298,7 +298,7 @@ def cart2sph(obsVector):
 
 def sph2cart(obsPolar):
     '''
-    Transform spherical coordinates to Cartesian coordinates given r = 1.
+    Transform spherical coordinates in the form (theta, phi) to Cartesian coordinates given r = 1.
     '''
     x = np.sin(obsPolar[0]) * np.cos(obsPolar[1])
     y = np.sin(obsPolar[0]) * np.sin(obsPolar[1])
@@ -404,3 +404,29 @@ def timeDilation(rest_tau,alpha_dash,observer_speed):
     Computes time dilation of time scales according to the derived result.
     '''
     return rest_tau * (1-observer_speed*np.cos(alpha_dash)) / (np.sqrt(1-observer_speed**2))
+
+def conv2GalacticCoords(az,pol,polar_conv=True):
+    '''
+    - Converts my coordinate system into the galactic coordinate system.
+    - The combination of healpy.projview with a mollweide projection and plt.scatter means negative values of phi move to the left (increasing from 0 degrees) and positive values of phi move to the right (decreasing from 360 degrees) corresponding to a range in phi between -pi and pi.
+    - For theta, positive values move to the north pole and negative values move to the source pole (range between -pi/2 and +pi/2).
+    - To compensate, this function aligns an azimuthal angle between 0 and 2 pi to its corresponding angle Galactic coordinate l such that both are between 0 and 2 pi or 360 degrees e.g. +pi/2 corresponds to 90 degrees (left on the healpy map).
+    - The polar angle also is changed to be between 0 and pi instead of 0 and 2 pi.
+    '''
+    for i in range(0, len(az)):
+        if az[i] > np.pi:
+            diff = az[i] - np.pi
+            az[i] = -(-np.pi + diff)  # -ve to match moving left as increasing phi
+        elif az[i] < -np.pi:
+            diff = -np.pi - az[i]
+            az[i] = -(np.pi - diff)  # as above
+        else:
+            az[i] = -az[i]
+    
+    if not polar_conv:
+        return az
+    
+    elif polar_conv:
+        for i in range(0,len(pol)):
+            pol[i] = np.pi/2 - pol[i]
+        return az, pol

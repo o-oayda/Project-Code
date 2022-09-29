@@ -57,7 +57,7 @@ newDir = input('Enter directory name: ')
 restLambda = ang_freq_to_lambda(1)  # define ang_freq to be 1.
 obsSpeed = 0.001
 # obsPolar = (np.pi/2 - 30*np.pi/180, np.pi/2)  # pol, az nominally 0.7,4
-obsPolar = (0.7,4)
+obsPolar = (np.pi - 0.7, 4 - np.pi)
 observerVector = sph2cart(obsPolar)
 observerVector2 = np.asarray([observerVector])
 pol_true, az_true = obsPolar
@@ -70,8 +70,7 @@ nside = 16 # defines pixel density of projection
 # points_range = np.linspace(5*10**6, 20*10**6, num=16).astype(int) # 5 to 20 million, increments of 1 million
 # points_range = np.linspace(5*10**5, 10**7, num=11).astype(int) # 500,000 to 10 million in increments of 950,000
 points_range = np.linspace(10**6,2*10**7,num=20).astype(int)
-points_range = [2*10**7]
-trials = range(1,20)
+trials = range(1,21)
 
 #### Now determine evidences over a range of points
 for sigma in sigma_range:
@@ -135,7 +134,7 @@ for sigma in sigma_range:
 
                     # Fit parameters using dynesty and multiprocessing
                     with multiprocess.Pool(8) as pool:
-                        dsampler = dynesty.DynamicNestedSampler(
+                        dsampler = dynesty.NestedSampler(
                         lnlike, prior_transform, ndim=3, pool=pool, queue_size=8)
                         dsampler.run_nested()
                         dresults = dsampler.results

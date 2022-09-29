@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.8.5)  25 SEP 2022 21:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.8.5)  28 SEP 2022 13:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -201,8 +201,7 @@ Package siunitx Info: Option "separate-uncertainty" has been deprecated in
 )
 Package translations Info: No language package found. I am going to use `englis
 h' as default language. on input line 13.
-
-No file tableA-build.aux.
+ (./tableA-build.aux)
 \openout1 = `tableA-build.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
@@ -219,6 +218,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
+
 (/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count279
@@ -247,22 +247,17 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 1.
 
 Overfull \hbox (7.7778pt too wide) detected at line 5
-$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2$
+$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 3$
  []
 
 
 Overfull \hbox (7.7778pt too wide) detected at line 6
-$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 1$
+$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 3$
  []
 
 
 Overfull \hbox (7.7778pt too wide) detected at line 7
-$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2$
- []
-
-
-Overfull \hbox (5.00002pt too wide) detected at line 8
-$\OT1/cmr/m/n/10 17$
+$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 1$
  []
 
 
@@ -272,47 +267,197 @@ $\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2$
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 9
-$\OT1/cmr/m/n/10 28$
+$\OT1/cmr/m/n/10 20$
  []
 
 
 Overfull \hbox (7.7778pt too wide) detected at line 9
-$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 0$
+$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 10
-$\OT1/cmr/m/n/10 41$
+$\OT1/cmr/m/n/10 18$
+ []
+
+
+Overfull \hbox (7.7778pt too wide) detected at line 10
+$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 11
-$\OT1/cmr/m/n/10 50$
+$\OT1/cmr/m/n/10 27$
+ []
+
+
+Overfull \hbox (7.7778pt too wide) detected at line 11
+$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 2$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 12
-$\OT1/cmr/m/n/10 55$
+$\OT1/cmr/m/n/10 29$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 13
-$\OT1/cmr/m/n/10 68$
+$\OT1/cmr/m/n/10 35$
+ []
+
+
+Overfull \hbox (7.7778pt too wide) detected at line 13
+$\OMS/cmsy/m/n/10 ^^@\OT1/cmr/m/n/10 1$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 14
-$\OT1/cmr/m/n/10 85$
+$\OT1/cmr/m/n/10 43$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 15
+$\OT1/cmr/m/n/10 47$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 16
+$\OT1/cmr/m/n/10 50$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 17
+$\OT1/cmr/m/n/10 58$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 18
+$\OT1/cmr/m/n/10 54$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 19
+$\OT1/cmr/m/n/10 65$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 20
+$\OT1/cmr/m/n/10 70$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 21
+$\OT1/cmr/m/n/10 82$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 22
+$\OT1/cmr/m/n/10 85$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 23
+$\OT1/cmr/m/n/10 87$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 24
 $\OT1/cmr/m/n/10 84$
  []
 
 
-Overfull \hbox (10.00003pt too wide) detected at line 16
+Overfull \hbox (10.00003pt too wide) detected at line 25
 $\OT1/cmr/m/n/10 100$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 26
+$\OT1/cmr/m/n/10 112$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 27
+$\OT1/cmr/m/n/10 119$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 27
+$\OT1/cmr/m/n/10 12$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 28
+$\OT1/cmr/m/n/10 134$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 28
+$\OT1/cmr/m/n/10 13$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 29
+$\OT1/cmr/m/n/10 140$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 29
+$\OT1/cmr/m/n/10 16$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 30
+$\OT1/cmr/m/n/10 151$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 30
+$\OT1/cmr/m/n/10 18$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 31
+$\OT1/cmr/m/n/10 156$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 31
+$\OT1/cmr/m/n/10 16$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 32
+$\OT1/cmr/m/n/10 171$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 32
+$\OT1/cmr/m/n/10 16$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 33
+$\OT1/cmr/m/n/10 184$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 33
+$\OT1/cmr/m/n/10 18$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 34
+$\OT1/cmr/m/n/10 193$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 34
+$\OT1/cmr/m/n/10 23$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 35
+$\OT1/cmr/m/n/10 198$
  []
 
 ) [1
@@ -320,9 +465,9 @@ $\OT1/cmr/m/n/10 100$
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 (./tableA-build.aux) ) 
 Here is how much of TeX's memory you used:
- 6390 strings out of 478268
- 152402 string characters out of 5846348
- 464996 words of memory out of 5000000
+ 6392 strings out of 478268
+ 152436 string characters out of 5846348
+ 532987 words of memory out of 5000000
  24575 multiletter control sequences out of 15000+600000
  469259 words of font info for 28 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -332,7 +477,7 @@ sfonts/cm/cmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmsy10.pfb>
-Output written on tableA-build.pdf (1 page, 40161 bytes).
+Output written on tableA-build.pdf (1 page, 41097 bytes).
 PDF statistics:
  28 PDF objects out of 1000 (max. 8388607)
  16 compressed objects within 1 object stream

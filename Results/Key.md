@@ -22,6 +22,9 @@ Results Table 3: 30%, (0.7,4)
 
 
 
+Note:
+- `nside = 16`, `obsSpeed = 0.001` and priors are uniform across all angles of a sphere with $v \sim U(0,0.01)$ for all tests below:
+- From the second trial in the 27-09 for Test A, `NestedSampler` was used as oppossed to `DynamicNestedSampler` on the basis that the former is better for evaluating the evidence (and faster). This has produced better results.
 
 | Test | Characteristics | Files |
 |------|---|---|

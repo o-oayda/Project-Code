@@ -1,3 +1,5 @@
+from enum import unique
+from re import L
 import pandas as pd
 import numpy as np
 import os
@@ -12,7 +14,7 @@ if test_index == 'A':
     # RESULTS1 10% uncertainty, obsPolar = (0.7, 4)
     test_files = [
         'Results/1-08-r1/evidences.csv',
-        'Results/1-08-r2/evidences.csv',
+        # 'Results/1-08-r2/evidences.csv', #annoying NaNs
         'Results/1-08-r3/evidences.csv',
         'Results/4-08-r2/evidences.csv',
         'Results/5-08/evidences.csv',
@@ -21,6 +23,9 @@ if test_index == 'A':
         'Results/5-08-r4/evidences.csv',
         'Results/5-08-r5/evidences.csv',
         'Results/5-08-r6/evidences.csv']
+    
+    for i in range(1,21):
+        test_files.append('Results/27-09/evidences-trials' + str(i) + 'sigma0.1.csv')
 
 elif test_index == 'B':
     # RESULTS2 (np.pi/2, 4), 10% uncertainty
@@ -38,26 +43,10 @@ elif test_index == 'C':
         'Results/8-08/evidences.csv',
         'Results/8-08-r2/evidences.csv',
         'Results/8-08-r3/evidences.csv',
-        'Results/8-08-r4/evidences.csv',
-        'Results/26-09/evidences-trials1sigma0.3.csv',
-        'Results/26-09/evidences-trials2sigma0.3.csv', 
-        'Results/26-09/evidences-trials3sigma0.3.csv',
-        'Results/26-09/evidences-trials4sigma0.3.csv',
-        'Results/26-09/evidences-trials5sigma0.3.csv',
-        'Results/26-09/evidences-trials6sigma0.3.csv',
-        'Results/26-09/evidences-trials7sigma0.3.csv',
-        'Results/26-09/evidences-trials8sigma0.3.csv',
-        'Results/26-09/evidences-trials9sigma0.3.csv',
-        'Results/26-09/evidences-trials10sigma0.3.csv',
-        'Results/26-09/evidences-trials11sigma0.3.csv',
-        'Results/26-09/evidences-trials12sigma0.3.csv',
-        'Results/26-09/evidences-trials13sigma0.3.csv',
-        'Results/26-09/evidences-trials14sigma0.3.csv',
-        'Results/26-09/evidences-trials15sigma0.3.csv',
-        'Results/26-09/evidences-trials16sigma0.3.csv',
-        'Results/26-09/evidences-trials17sigma0.3.csv',
-        'Results/26-09/evidences-trials18sigma0.3.csv',
-        'Results/26-09/evidences-trials19sigma0.3.csv']
+        'Results/8-08-r4/evidences.csv']
+        
+    for i in range(1,20):
+        test_files.append('Results/26-09/evidences-trials' + str(i) + 'sigma0.3.csv')
 
 # obsPolar = (np.pi - 0.7, 4 - np.pi), 0.01%
 elif test_index == 'D':
@@ -85,6 +74,9 @@ elif test_index == 'F':
         'Results/15-08/evidences-trials3sigma0.3.csv',
         'Results/15-08/evidences-trials4sigma0.3.csv',
         'Results/15-08/evidences-trials4sigma0.3.csv']
+
+    for i in range(1,21):
+        test_files.append('Results/28-09/evidences-trials' + str(i) + 'sigma0.3.csv')
 
 elif test_index == 'G':
     test_files = [
@@ -124,24 +116,43 @@ for filename in test_files:
 points_range = df['Points']
 total_frame = pd.concat(frames)
 
-# determine Bayes factor across trials
+# find unique points across trials
+unique_points = sorted(list(set(total_frame['Points'])))
+
 bayes_cmb_fitted = []
 bayes_cmb_fitted_error = []
 bayes_fitted_null = []
 bayes_fitted_null_error = []
-for i in range(0,len(points_range)):
-    factors = total_frame['ln(Z)'][i] - total_frame['ln(Z_CMB)'][i]
+# extract all rows corresponding to a certain number of points
+for k in unique_points:
+    active_frame = total_frame.loc[total_frame['Points'] == k]
+    factors = active_frame['ln(Z)'] - active_frame['ln(Z_CMB)']
     bayes_cmb_fitted.append(np.mean(factors))
     bayes_cmb_fitted_error.append(np.std(factors))
-    factors2 = total_frame['ln(Z)'][i] - total_frame['ln(Z_0)'][i]
+    factors2 = active_frame['ln(Z)'] - active_frame['ln(Z_0)']
     bayes_fitted_null.append(np.mean(factors2))
     bayes_fitted_null_error.append(np.std(factors))
+    
+# not working properly—assumes all data files have the same point ranges
+# determine Bayes factor across trials
+# bayes_cmb_fitted = []
+# bayes_cmb_fitted_error = []
+# bayes_fitted_null = []
+# bayes_fitted_null_error = []
+# for i in range(0,len(points_range)):
+#     factors = total_frame['ln(Z)'][i] - total_frame['ln(Z_CMB)'][i]
+#     bayes_cmb_fitted.append(np.mean(factors))
+#     bayes_cmb_fitted_error.append(np.std(factors))
+#     factors2 = total_frame['ln(Z)'][i] - total_frame['ln(Z_0)'][i]
+#     bayes_fitted_null.append(np.mean(factors2))
+#     bayes_fitted_null_error.append(np.std(factors))
 
 bayes_cmb_fitted = np.asarray(bayes_cmb_fitted,dtype=float)
 bayes_cmb_fitted_error = np.asarray(bayes_cmb_fitted_error,dtype=float)
 bayes_fitted_null = np.asarray(bayes_fitted_null,dtype=float)
 bayes_fitted_null_error = np.asarray(bayes_fitted_null_error,dtype=float)
 
+# convert to string with the \pm symbol for LaTeX table
 factor_cmb_fitted = []
 factor_fitted_null = []
 for i in range(0,len(bayes_cmb_fitted)):
@@ -156,25 +167,52 @@ for i in range(0,len(bayes_cmb_fitted)):
 means_fitted = []
 devs_fitted = []
 fitted_evidence = []
-for i in range(0,len(points_range)):
-    means_fitted.append(np.mean((total_frame['ln(Z)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
-    fitted_evidence.append((total_frame['ln(Z)'])[i])
-    devs_fitted.append(np.std((total_frame['ln(Z)'])[i]))
+for j in unique_points:
+    active_frame = total_frame.loc[total_frame['Points'] == j]
 
+    means_fitted.append(np.mean(active_frame['ln(Z)']))
+    fitted_evidence.append(active_frame['ln(Z)'])
+    devs_fitted.append(np.std(active_frame['ln(Z)']))
+
+# deprecated
+# for i in range(0,len(points_range)):
+#     means_fitted.append(np.mean((total_frame['ln(Z)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
+#     fitted_evidence.append((total_frame['ln(Z)'])[i])
+#     devs_fitted.append(np.std((total_frame['ln(Z)'])[i]))
 
 means_cmb = []
 devs_cmb = []
 cmb_evidence = []
-for i in range(0,len(points_range)):
-    means_cmb.append(np.mean((total_frame['ln(Z_CMB)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
-    cmb_evidence.append((total_frame['ln(Z_CMB)'])[i])
-    devs_cmb.append(np.std((total_frame['ln(Z_CMB)'])[i]))
+for j in unique_points:
+    active_frame = total_frame.loc[total_frame['Points'] == j]
+
+    # this selects lnZs that share an index i.e. across multiple trials
+    means_cmb.append(np.mean(active_frame['ln(Z_CMB)']))
+    cmb_evidence.append(active_frame['ln(Z_CMB)'])
+    devs_cmb.append(np.std(active_frame['ln(Z_CMB)']))
+
+# deprecated
+# means_cmb = []
+# devs_cmb = []
+# cmb_evidence = []
+# for i in range(0,len(points_range)):
+#     means_cmb.append(np.mean((total_frame['ln(Z_CMB)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
+#     cmb_evidence.append((total_frame['ln(Z_CMB)'])[i])
+#     devs_cmb.append(np.std((total_frame['ln(Z_CMB)'])[i]))
 
 means_null = []
 devs_null = []
-for i in range(0,len(points_range)):
-    means_null.append(np.mean((total_frame['ln(Z_0)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
-    devs_null.append(np.std((total_frame['ln(Z_0)'])[i]))
+
+for j in unique_points:
+    active_frame = total_frame.loc[total_frame['Points'] == j]
+
+    means_null.append(np.mean(active_frame['ln(Z_0)']))
+    devs_null.append(np.std(active_frame['ln(Z_0)']))
+
+# deprecated
+# for i in range(0,len(points_range)):
+#     means_null.append(np.mean((total_frame['ln(Z_0)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
+#     devs_null.append(np.std((total_frame['ln(Z_0)'])[i]))
 
 fitted = np.asarray(means_fitted,dtype=float)
 devs_fitted = np.asarray(devs_fitted,dtype=float)
@@ -183,10 +221,11 @@ devs_cmb = np.asarray(devs_cmb)
 null = np.asarray(means_null)
 devs_null = np.asarray(devs_null)
 
-nice = np.c_[points_range,fitted,cmb,fitted - cmb]
+# not sure why that was here
+# nice = np.c_[points_range,fitted,cmb,fitted - cmb]
 # print(nice)
-print('CMB means:' + str(cmb))
-print('CMB errors:' + str(devs_cmb))
+# print('CMB means:' + str(cmb))
+# print('CMB errors:' + str(devs_cmb))
 
 # compute bayes factor and uncertainty by adding errors
 # for two hypotheses in quadrature
@@ -225,8 +264,8 @@ for i in range(0,len(fitted)):
 
 # print(errors_bayes)
 
-# dataframe to be exported to csv
-nice2 = np.c_[points_range,errors_fitted,errors_cmb,errors_null,factor_cmb_fitted,factor_fitted_null]
+# dataframe to be exported to csv --- replaced with unique points
+nice2 = np.c_[unique_points,errors_fitted,errors_cmb,errors_null,factor_cmb_fitted,factor_fitted_null]
 results1 = (pd.DataFrame(nice2)) #instead of nice
 
 # plotting results
@@ -277,23 +316,23 @@ plt.figure()
 
 #  plot fitted to CMB Bayes factors
 plt.errorbar(
-    points_range,
+    unique_points,
     bayes_cmb_fitted,
     yerr=bayes_cmb_fitted_error,
     label=r'$\ln ( \mathcal{Z} / {\mathcal{Z}_{CMB}} )$',
     capsize=4,
-    markersize=5,
+    markersize=4,
     lw=1,
     fmt='o')
 
 # plot fitted to null Bayes factors
 plt.errorbar(
-    points_range,
+    unique_points,
     bayes_fitted_null,
     yerr=bayes_fitted_null_error,
     label=r'$\ln ( \mathcal{Z} / \mathcal{Z}_0 )$',
     capsize=4,
-    markersize=5,
+    markersize=4,
     lw=1,
     fmt='o')
 

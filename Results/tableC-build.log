@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.8.5)  27 SEP 2022 10:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.8.5)  28 SEP 2022 13:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -246,18 +246,18 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 1.
 
-Overfull \hbox (5.00002pt too wide) detected at line 6
-$\OT1/cmr/m/n/10 24$
+Overfull \hbox (5.00002pt too wide) detected at line 5
+$\OT1/cmr/m/n/10 10$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 6
-$\OT1/cmr/m/n/10 11$
+$\OT1/cmr/m/n/10 20$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 7
-$\OT1/cmr/m/n/10 32$
+$\OT1/cmr/m/n/10 26$
  []
 
 
@@ -267,12 +267,12 @@ $\OT1/cmr/m/n/10 20$
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 8
-$\OT1/cmr/m/n/10 40$
+$\OT1/cmr/m/n/10 30$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 8
-$\OT1/cmr/m/n/10 20$
+$\OT1/cmr/m/n/10 10$
  []
 
 
@@ -287,7 +287,7 @@ $\OT1/cmr/m/n/10 20$
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 10
-$\OT1/cmr/m/n/10 60$
+$\OT1/cmr/m/n/10 50$
  []
 
 
@@ -297,27 +297,27 @@ $\OT1/cmr/m/n/10 10$
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 11
+$\OT1/cmr/m/n/10 70$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 11
+$\OT1/cmr/m/n/10 20$
+ []
+
+
+Overfull \hbox (5.00002pt too wide) detected at line 12
 $\OT1/cmr/m/n/10 80$
  []
 
 
-Overfull \hbox (5.00002pt too wide) detected at line 11
-$\OT1/cmr/m/n/10 20$
- []
-
-
-Overfull \hbox (5.00002pt too wide) detected at line 12
-$\OT1/cmr/m/n/10 90$
- []
-
-
 Overfull \hbox (5.00002pt too wide) detected at line 12
 $\OT1/cmr/m/n/10 10$
  []
 
 
-Overfull \hbox (10.00003pt too wide) detected at line 13
-$\OT1/cmr/m/n/10 100$
+Overfull \hbox (5.00002pt too wide) detected at line 13
+$\OT1/cmr/m/n/10 90$
  []
 
 
@@ -326,8 +326,8 @@ $\OT1/cmr/m/n/10 20$
  []
 
 
-Overfull \hbox (10.00003pt too wide) detected at line 14
-$\OT1/cmr/m/n/10 100$
+Overfull \hbox (5.00002pt too wide) detected at line 14
+$\OT1/cmr/m/n/10 90$
  []
 
 
@@ -337,17 +337,17 @@ $\OT1/cmr/m/n/10 20$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 15
-$\OT1/cmr/m/n/10 110$
+$\OT1/cmr/m/n/10 100$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 15
-$\OT1/cmr/m/n/10 10$
+$\OT1/cmr/m/n/10 20$
  []
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 16
-$\OT1/cmr/m/n/10 140$
+$\OT1/cmr/m/n/10 130$
  []
 
 
@@ -367,7 +367,7 @@ $\OT1/cmr/m/n/10 20$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 18
-$\OT1/cmr/m/n/10 150$
+$\OT1/cmr/m/n/10 140$
  []
 
 
@@ -387,7 +387,7 @@ $\OT1/cmr/m/n/10 20$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 20
-$\OT1/cmr/m/n/10 180$
+$\OT1/cmr/m/n/10 160$
  []
 
 
@@ -397,7 +397,7 @@ $\OT1/cmr/m/n/10 20$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 21
-$\OT1/cmr/m/n/10 190$
+$\OT1/cmr/m/n/10 170$
  []
 
 
@@ -407,7 +407,7 @@ $\OT1/cmr/m/n/10 30$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 22
-$\OT1/cmr/m/n/10 170$
+$\OT1/cmr/m/n/10 180$
  []
 
 
@@ -427,7 +427,7 @@ $\OT1/cmr/m/n/10 30$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 24
-$\OT1/cmr/m/n/10 200$
+$\OT1/cmr/m/n/10 210$
  []
 
 
@@ -457,7 +457,7 @@ sfonts/cm/cmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmsy10.pfb>
-Output written on tableC-build.pdf (1 page, 40505 bytes).
+Output written on tableC-build.pdf (1 page, 40479 bytes).
 PDF statistics:
  28 PDF objects out of 1000 (max. 8388607)
  16 compressed objects within 1 object stream
