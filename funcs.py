@@ -413,20 +413,49 @@ def conv2GalacticCoords(az,pol,polar_conv=True):
     - To compensate, this function aligns an azimuthal angle between 0 and 2 pi to its corresponding angle Galactic coordinate l such that both are between 0 and 2 pi or 360 degrees e.g. +pi/2 corresponds to 90 degrees (left on the healpy map).
     - The polar angle also is changed to be between 0 and pi instead of 0 and 2 pi.
     '''
+    az_new = az
+    pol_new = pol
     for i in range(0, len(az)):
         if az[i] > np.pi:
             diff = az[i] - np.pi
-            az[i] = -(-np.pi + diff)  # -ve to match moving left as increasing phi
+            az_new[i] = -(-np.pi + diff)  # -ve to match moving left as increasing phi
         elif az[i] < -np.pi:
             diff = -np.pi - az[i]
-            az[i] = -(np.pi - diff)  # as above
+            az_new[i] = -(np.pi - diff)  # as above
         else:
-            az[i] = -az[i]
+            az_new[i] = -az[i]
     
     if not polar_conv:
-        return az
+        return az_new
     
     elif polar_conv:
         for i in range(0,len(pol)):
-            pol[i] = np.pi/2 - pol[i]
-        return az, pol
+            pol_new[i] = np.pi/2 - pol[i]
+        return az_new, pol_new
+
+def window(light_curve,season_length,season_gap,cadence):
+    '''
+    Window light curve data according to observation strategy.
+    '''
+    num_seasonal = season_length / cadence
+    num_off = season_gap / cadence
+
+    windowed_curve = []
+    season_counter = 0
+    for i in range(len(light_curve)):
+    
+        if season_counter > num_seasonal and season_counter < num_seasonal + num_off:
+            on_season = False
+        elif season_counter <= num_seasonal:
+            on_season = True
+        elif season_counter > num_seasonal + num_off:
+            on_season = True
+            season_counter = 0
+        
+        if on_season:
+            windowed_curve.append(light_curve[i])
+            season_counter += 1
+        elif not on_season:
+            season_counter += 1
+
+    return windowed_curve

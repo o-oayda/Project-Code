@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.8.5)  28 SEP 2022 13:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.8.5)  18 OCT 2022 09:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -201,7 +201,8 @@ Package siunitx Info: Option "separate-uncertainty" has been deprecated in
 )
 Package translations Info: No language package found. I am going to use `englis
 h' as default language. on input line 13.
- (./tableI-build.aux)
+
+No file tableI-build.aux.
 \openout1 = `tableI-build.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
@@ -218,7 +219,6 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
-
 (/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count279
@@ -257,12 +257,12 @@ $\OT1/cmr/m/n/10 10$
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 6
-$\OT1/cmr/m/n/10 70$
+$\OT1/cmr/m/n/10 50$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 7
-$\OT1/cmr/m/n/10 40$
+$\OT1/cmr/m/n/10 20$
  []
 
 
@@ -277,27 +277,27 @@ $\OT1/cmr/m/n/10 20$
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 8
-$\OT1/cmr/m/n/10 90$
+$\OT1/cmr/m/n/10 70$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 9
-$\OT1/cmr/m/n/10 40$
+$\OT1/cmr/m/n/10 30$
  []
 
 
-Overfull \hbox (5.00002pt too wide) detected at line 9
-$\OT1/cmr/m/n/10 90$
+Overfull \hbox (10.00003pt too wide) detected at line 9
+$\OT1/cmr/m/n/10 110$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 10
-$\OT1/cmr/m/n/10 50$
+$\OT1/cmr/m/n/10 40$
  []
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 10
-$\OT1/cmr/m/n/10 120$
+$\OT1/cmr/m/n/10 110$
  []
 
 
@@ -312,7 +312,7 @@ $\OT1/cmr/m/n/10 130$
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 12
-$\OT1/cmr/m/n/10 70$
+$\OT1/cmr/m/n/10 50$
  []
 
 
@@ -327,7 +327,7 @@ $\OT1/cmr/m/n/10 60$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 13
-$\OT1/cmr/m/n/10 150$
+$\OT1/cmr/m/n/10 160$
  []
 
 
@@ -337,12 +337,12 @@ $\OT1/cmr/m/n/10 80$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 14
-$\OT1/cmr/m/n/10 150$
+$\OT1/cmr/m/n/10 170$
  []
 
 
 Overfull \hbox (5.00002pt too wide) detected at line 15
-$\OT1/cmr/m/n/10 70$
+$\OT1/cmr/m/n/10 80$
  []
 
 
@@ -351,23 +351,23 @@ $\OT1/cmr/m/n/10 200$
  []
 
 
-Overfull \hbox (10.00003pt too wide) detected at line 16
-$\OT1/cmr/m/n/10 100$
+Overfull \hbox (5.00002pt too wide) detected at line 16
+$\OT1/cmr/m/n/10 90$
  []
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 16
-$\OT1/cmr/m/n/10 160$
- []
-
-
-Overfull \hbox (5.00002pt too wide) detected at line 17
-$\OT1/cmr/m/n/10 70$
+$\OT1/cmr/m/n/10 210$
  []
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 17
-$\OT1/cmr/m/n/10 240$
+$\OT1/cmr/m/n/10 100$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 17
+$\OT1/cmr/m/n/10 250$
  []
 
 
@@ -377,12 +377,12 @@ $\OT1/cmr/m/n/10 100$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 18
-$\OT1/cmr/m/n/10 260$
+$\OT1/cmr/m/n/10 240$
  []
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 19
-$\OT1/cmr/m/n/10 110$
+$\OT1/cmr/m/n/10 120$
  []
 
 
@@ -392,47 +392,47 @@ $\OT1/cmr/m/n/10 250$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 20
-$\OT1/cmr/m/n/10 120$
+$\OT1/cmr/m/n/10 110$
  []
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 20
-$\OT1/cmr/m/n/10 330$
- []
-
-
-Overfull \hbox (10.00003pt too wide) detected at line 21
-$\OT1/cmr/m/n/10 170$
- []
-
-
-Overfull \hbox (10.00003pt too wide) detected at line 21
-$\OT1/cmr/m/n/10 340$
- []
-
-
-Overfull \hbox (10.00003pt too wide) detected at line 22
-$\OT1/cmr/m/n/10 160$
- []
-
-
-Overfull \hbox (10.00003pt too wide) detected at line 22
-$\OT1/cmr/m/n/10 350$
- []
-
-
-Overfull \hbox (10.00003pt too wide) detected at line 23
-$\OT1/cmr/m/n/10 130$
- []
-
-
-Overfull \hbox (10.00003pt too wide) detected at line 23
 $\OT1/cmr/m/n/10 310$
  []
 
 
+Overfull \hbox (10.00003pt too wide) detected at line 21
+$\OT1/cmr/m/n/10 140$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 21
+$\OT1/cmr/m/n/10 320$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 22
+$\OT1/cmr/m/n/10 130$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 22
+$\OT1/cmr/m/n/10 310$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 23
+$\OT1/cmr/m/n/10 120$
+ []
+
+
+Overfull \hbox (10.00003pt too wide) detected at line 23
+$\OT1/cmr/m/n/10 350$
+ []
+
+
 Overfull \hbox (10.00003pt too wide) detected at line 24
-$\OT1/cmr/m/n/10 150$
+$\OT1/cmr/m/n/10 160$
  []
 
 
@@ -442,7 +442,7 @@ $\OT1/cmr/m/n/10 330$
 
 
 Overfull \hbox (10.00003pt too wide) detected at line 25
-$\OT1/cmr/m/n/10 100$
+$\OT1/cmr/m/n/10 150$
  []
 
 ) [1
@@ -450,9 +450,9 @@ $\OT1/cmr/m/n/10 100$
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 (./tableI-build.aux) ) 
 Here is how much of TeX's memory you used:
- 6392 strings out of 478268
- 152436 string characters out of 5846348
- 497987 words of memory out of 5000000
+ 6390 strings out of 478268
+ 152402 string characters out of 5846348
+ 497996 words of memory out of 5000000
  24575 multiletter control sequences out of 15000+600000
  469259 words of font info for 28 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -462,7 +462,7 @@ sfonts/cm/cmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmsy10.pfb>
-Output written on tableI-build.pdf (1 page, 40575 bytes).
+Output written on tableI-build.pdf (1 page, 40560 bytes).
 PDF statistics:
  28 PDF objects out of 1000 (max. 8388607)
  16 compressed objects within 1 object stream

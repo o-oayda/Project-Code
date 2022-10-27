@@ -1,31 +1,55 @@
 from enum import unique
-from re import L
+from re import A, L
 import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-import time
 from funcs import conv2PlusMinus, conv2siunitx
+import matplotlib.ticker
+from matplotlib import rc
+import matplotlib
+
+ ### LaTeX Font for plotting ###
+rc('font', **{'family': 'sans-serif', 'sans-serif': ['Times-Roman']})
+rc('text', usetex=True)
+matplotlib.rcParams['text.latex.preamble'] = [r"\usepackage{amsmath}"]
+##########
+
+# from https://stackoverflow.com/questions/42656139/set-scientific-notation-with-fixed-exponent-and-significant-digits-for-multiple
+# for specifying the order of magnitude of the plot axis in scientific notation
+class OOMFormatter(matplotlib.ticker.ScalarFormatter):
+    def __init__(self, order=0, fformat="%1.1f", offset=True, mathText=True):
+        self.oom = order
+        self.fformat = fformat
+        matplotlib.ticker.ScalarFormatter.__init__(self,useOffset=offset,useMathText=mathText)
+    def _set_order_of_magnitude(self):
+        self.orderOfMagnitude = self.oom
+    def _set_format(self, vmin=None, vmax=None):
+        self.format = self.fformat
+        if self._useMathText:
+            self.format = r'$\mathdefault{%s}$' % self.format
 
 test_index = input('Provide test index: ')
 
 # read in evidence csvs
 if test_index == 'A':
     # RESULTS1 10% uncertainty, obsPolar = (0.7, 4)
-    test_files = [
-        'Results/1-08-r1/evidences.csv',
-        # 'Results/1-08-r2/evidences.csv', #annoying NaNs
-        'Results/1-08-r3/evidences.csv',
-        'Results/4-08-r2/evidences.csv',
-        'Results/5-08/evidences.csv',
-        'Results/5-08-r2/evidences.csv',
-        'Results/5-08-r3/evidences.csv',
-        'Results/5-08-r4/evidences.csv',
-        'Results/5-08-r5/evidences.csv',
-        'Results/5-08-r6/evidences.csv']
-    
+    # test_files = [
+    #     'Results/1-08-r1/evidences.csv',
+    #     # 'Results/1-08-r2/evidences.csv', #annoying NaNs
+    #     'Results/1-08-r3/evidences.csv',
+    #     'Results/4-08-r2/evidences.csv',
+    #     'Results/5-08/evidences.csv',
+    #     'Results/5-08-r2/evidences.csv',
+    #     'Results/5-08-r3/evidences.csv',
+    #     'Results/5-08-r4/evidences.csv',
+    #     'Results/5-08-r5/evidences.csv',
+    #     'Results/5-08-r6/evidences.csv']
+    test_files = []
     for i in range(1,21):
         test_files.append('Results/27-09/evidences-trials' + str(i) + 'sigma0.1.csv')
+    
+    title = r'Bayes factors: $\Delta \tau_0 = 10 \%; (\theta, \phi) = (0.7,4)$'
 
 elif test_index == 'B':
     # RESULTS2 (np.pi/2, 4), 10% uncertainty
@@ -35,6 +59,8 @@ elif test_index == 'B':
         'Results/7-08-r3/evidences.csv',
         'Results/7-08-r4/evidences.csv',
         'Results/7-08-r5/evidences.csv']
+    
+    title = r'Bayes factors: $\Delta \tau_0 = 10 \%; (\theta, \phi) = (\pi / 2,4)$'
 
 elif test_index == 'C':
     # 30% uncertainty, `obsPolar = (0.7,4)`
@@ -47,6 +73,8 @@ elif test_index == 'C':
         
     for i in range(1,20):
         test_files.append('Results/26-09/evidences-trials' + str(i) + 'sigma0.3.csv')
+    
+    title = r'Bayes factors: $\Delta \tau_0 = 30 \%; (\theta, \phi) = (0.7,4)$'
 
 # obsPolar = (np.pi - 0.7, 4 - np.pi), 0.01%
 elif test_index == 'D':
@@ -58,6 +86,8 @@ elif test_index == 'D':
         'Results/15-08/evidences-trials5sigma0.01.csv',
         'Results/15-08/evidences-trials6sigma0.01.csv',
         'Results/15-08/evidences-trials7sigma0.01.csv']
+    
+    title = r'Bayes factors: $\Delta \tau_0 = 1 \%; (\theta, \phi) = (2.4,0.9)$'
 
 elif test_index == 'E':
     test_files = [
@@ -66,6 +96,9 @@ elif test_index == 'E':
         'Results/15-08/evidences-trials3sigma0.1.csv',
         'Results/15-08/evidences-trials4sigma0.1.csv',
         'Results/15-08/evidences-trials4sigma0.1.csv']
+    
+    # title = r'Bayes factors: $\Delta \tau_0 = 10 \%; (\theta, \phi) = (\pi - 0.7,4 - pi)$'
+    title = r'Bayes factors: $\Delta \tau_0 = 10 \%; (\theta, \phi) = (2.4,0.9)$'
 
 elif test_index == 'F':
     test_files = [
@@ -77,6 +110,8 @@ elif test_index == 'F':
 
     for i in range(1,21):
         test_files.append('Results/28-09/evidences-trials' + str(i) + 'sigma0.3.csv')
+    
+    title = r'Bayes factors: $\Delta \tau_0 = 30 \%; (\theta, \phi) = (2.4,0.9)$'
 
 elif test_index == 'G':
     test_files = [
@@ -86,6 +121,11 @@ elif test_index == 'G':
         'Results/15-08/evidences-trials4sigma0.5.csv',
         'Results/15-08/evidences-trials4sigma0.5.csv']
 
+    for i in range(1,21):
+        test_files.append('Results/29-09/evidences-trials' + str(i) + 'sigma0.5.csv')
+    
+    title = r'Bayes factors: $\Delta \tau_0 = 50 \%; (\theta, \phi) = (2.4,0.9)$'
+
 elif test_index == 'H':
     test_files = [
         'Results/22-08/evidences-trials1sigma0.1.csv',
@@ -93,6 +133,8 @@ elif test_index == 'H':
         'Results/22-08/evidences-trials3sigma0.1.csv',
         'Results/22-08/evidences-trials4sigma0.1.csv',
         'Results/22-08/evidences-trials5sigma0.1.csv']
+    
+    title = r'Bayes factors: $\Delta \tau_0 = 10 \%; (\theta, \phi) = (1.04, \pi / 2)$'
 
 elif test_index == 'I':
     test_files = [
@@ -102,12 +144,31 @@ elif test_index == 'I':
         'Results/22-08/evidences-trials4sigma0.3.csv',
         'Results/22-08/evidences-trials5sigma0.3.csv']
 
+    for i in range(1,21):
+        test_files.append('Results/29-09-v2/evidences-trials' + str(i) + 'sigma0.3.csv')
+    
+    title = r'Bayes factors: $\Delta \tau_0 = 30 \%; (\theta, \phi) = (1.04, \pi / 2)$'
+
 elif test_index == 'J':
     test_files = [
         'Results/22-08/evidences-trials1sigma0.5.csv',
         'Results/22-08/evidences-trials2sigma0.5.csv']
+    
+    for i in range(1,21):
+        test_files.append('Results/29-09-v2/evidences-trials' + str(i) + 'sigma0.5.csv')
+    
+    title = r'Bayes factors: $\Delta \tau_0 = 50 \%; (\theta, \phi) = (1.04, \pi / 2)$'
 
-# combine dataframes
+elif test_index == 'K':
+
+    test_files = []
+    for i in range(1,21):
+        test_files.append('Results/23-10/evidences-trials{}sigma0.3.csv'.format(str(i)))
+
+    title = r'Bayes factors: $\Delta \tau_0 = 30 \%; (\theta, \phi) = (0.7,4)$'
+
+##### COMPUTE BAYES FACTORS #######
+# Read in csv filed containing evidences and combine into a dataframe
 frames = []
 for filename in test_files:
     df = pd.read_csv(filename)
@@ -119,11 +180,11 @@ total_frame = pd.concat(frames)
 # find unique points across trials
 unique_points = sorted(list(set(total_frame['Points'])))
 
+# extract all rows corresponding to a certain number of points
 bayes_cmb_fitted = []
 bayes_cmb_fitted_error = []
 bayes_fitted_null = []
 bayes_fitted_null_error = []
-# extract all rows corresponding to a certain number of points
 for k in unique_points:
     active_frame = total_frame.loc[total_frame['Points'] == k]
     factors = active_frame['ln(Z)'] - active_frame['ln(Z_CMB)']
@@ -132,20 +193,6 @@ for k in unique_points:
     factors2 = active_frame['ln(Z)'] - active_frame['ln(Z_0)']
     bayes_fitted_null.append(np.mean(factors2))
     bayes_fitted_null_error.append(np.std(factors))
-    
-# not working properly—assumes all data files have the same point ranges
-# determine Bayes factor across trials
-# bayes_cmb_fitted = []
-# bayes_cmb_fitted_error = []
-# bayes_fitted_null = []
-# bayes_fitted_null_error = []
-# for i in range(0,len(points_range)):
-#     factors = total_frame['ln(Z)'][i] - total_frame['ln(Z_CMB)'][i]
-#     bayes_cmb_fitted.append(np.mean(factors))
-#     bayes_cmb_fitted_error.append(np.std(factors))
-#     factors2 = total_frame['ln(Z)'][i] - total_frame['ln(Z_0)'][i]
-#     bayes_fitted_null.append(np.mean(factors2))
-#     bayes_fitted_null_error.append(np.std(factors))
 
 bayes_cmb_fitted = np.asarray(bayes_cmb_fitted,dtype=float)
 bayes_cmb_fitted_error = np.asarray(bayes_cmb_fitted_error,dtype=float)
@@ -174,45 +221,23 @@ for j in unique_points:
     fitted_evidence.append(active_frame['ln(Z)'])
     devs_fitted.append(np.std(active_frame['ln(Z)']))
 
-# deprecated
-# for i in range(0,len(points_range)):
-#     means_fitted.append(np.mean((total_frame['ln(Z)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
-#     fitted_evidence.append((total_frame['ln(Z)'])[i])
-#     devs_fitted.append(np.std((total_frame['ln(Z)'])[i]))
-
 means_cmb = []
 devs_cmb = []
 cmb_evidence = []
 for j in unique_points:
     active_frame = total_frame.loc[total_frame['Points'] == j]
 
-    # this selects lnZs that share an index i.e. across multiple trials
     means_cmb.append(np.mean(active_frame['ln(Z_CMB)']))
     cmb_evidence.append(active_frame['ln(Z_CMB)'])
     devs_cmb.append(np.std(active_frame['ln(Z_CMB)']))
 
-# deprecated
-# means_cmb = []
-# devs_cmb = []
-# cmb_evidence = []
-# for i in range(0,len(points_range)):
-#     means_cmb.append(np.mean((total_frame['ln(Z_CMB)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
-#     cmb_evidence.append((total_frame['ln(Z_CMB)'])[i])
-#     devs_cmb.append(np.std((total_frame['ln(Z_CMB)'])[i]))
-
 means_null = []
 devs_null = []
-
 for j in unique_points:
     active_frame = total_frame.loc[total_frame['Points'] == j]
 
     means_null.append(np.mean(active_frame['ln(Z_0)']))
     devs_null.append(np.std(active_frame['ln(Z_0)']))
-
-# deprecated
-# for i in range(0,len(points_range)):
-#     means_null.append(np.mean((total_frame['ln(Z_0)'])[i])) # this selects lnZs that share an index i.e. across multiple trials
-#     devs_null.append(np.std((total_frame['ln(Z_0)'])[i]))
 
 fitted = np.asarray(means_fitted,dtype=float)
 devs_fitted = np.asarray(devs_fitted,dtype=float)
@@ -221,30 +246,11 @@ devs_cmb = np.asarray(devs_cmb)
 null = np.asarray(means_null)
 devs_null = np.asarray(devs_null)
 
-# not sure why that was here
-# nice = np.c_[points_range,fitted,cmb,fitted - cmb]
-# print(nice)
-# print('CMB means:' + str(cmb))
-# print('CMB errors:' + str(devs_cmb))
-
-# compute bayes factor and uncertainty by adding errors
-# for two hypotheses in quadrature
-# bayes_factor = fitted - cmb
-# bayes_factor_uncertainty = np.zeros(len(fitted))
-# print('Bayes factor: ' + str(bayes_factor))
-# for i in range(0,len(fitted)):
-#     bayes_factor_uncertainty[i] = np.sqrt(devs_fitted[i]**2 + devs_cmb[i]**2)
-# print('Bayes factor uncertainties: ' + str(bayes_factor_uncertainty))
-
-# use function to create string with errors
+# use conv2PlusMinus to create string with \pm symbol as errors
 errors_fitted = []
 errors_null = []
 errors_cmb = []
-# errors_bayes = []
 for i in range(0,len(fitted)):
-    # np.asarray(errors_fitted.append(conv2siunitx(fitted[i],devs_fitted[i])))
-    # np.asarray(errors_null.append(conv2siunitx(null[i],devs_null[i])))
-    # np.asarray(errors_cmb.append(conv2siunitx(cmb[i], devs_cmb[i])))
     errors_fitted.append(
         conv2PlusMinus(
             np.asarray(fitted[i]),
@@ -260,34 +266,29 @@ for i in range(0,len(fitted)):
             np.asarray(cmb[i]),
             np.asarray(devs_cmb[i])))
 
-    # np.asarray(errors_bayes.append(conv2siunitx(bayes_factor[i],bayes_factor_uncertainty[i])))
-
-# print(errors_bayes)
-
 # dataframe to be exported to csv --- replaced with unique points
-nice2 = np.c_[unique_points,errors_fitted,errors_cmb,errors_null,factor_cmb_fitted,factor_fitted_null]
-results1 = (pd.DataFrame(nice2)) #instead of nice
+export = np.c_[unique_points,errors_fitted,errors_cmb,errors_null,factor_cmb_fitted,factor_fitted_null]
+results1 = (pd.DataFrame(export))
 
-# plotting results
-## scatter of cmb evidence vs fitted evidence across number of trials for set number of points (index)
-# plt.scatter(fitted_evidence[0],cmb_evidence[0])
-# plt.show()
-
-## scatter of cmb evidence vs bayes factor across number of trials for set number of points
-# bayes_factor = fitted_evidence[0]-cmb_evidence[0]
-# plt.scatter(cmb_evidence[0],bayes_factor)
-# plt.show()
-
-# bayes factor vs log_cmb
-
+# write all evidence values and Bayes factors to .tex table
 table_name = 'table' + str(test_index)
 filename = str(table_name) + '-build'
 with open('Results/' + str(table_name) + '.tex','w') as tex_file:
        tex_file.write(results1.to_latex(
         na_rep='',
         index=False,
-        header = ['{$N$}',"{$\ln \mathcal{Z}$}","{$\ln \mathcal{Z}_{\\text{CMB}}$}",'{$\ln \mathcal{Z}_0$}','{$\ln \left( \mathcal{Z} / {\mathcal{Z}_{\\text{CMB}}}\\right)$}','{$\ln \left( \mathcal{Z} / {\mathcal{Z}_{0}}\\right)$}'],
-        column_format='S[table-format=8,round-precision=0]S[table-format=6(3),round-mode=uncertainty,round-precision=1]S[table-format=6(3),round-mode=uncertainty,round-precision=1]S[table-format=6(3),round-mode=uncertainty,round-precision=1]S[table-format=1(1),round-mode=uncertainty,round-precision=1]S[table-format=1(1),round-mode=uncertainty,round-precision=1]',
+        header = ['{$N$}',
+        "{$\ln \mathcal{Z}$}",
+        "{$\ln \mathcal{Z}_{\\text{CMB}}$}",
+        '{$\ln \mathcal{Z}_0$}',
+        '{$\ln \left( \mathcal{Z} / {\mathcal{Z}_{\\text{CMB}}}\\right)$}',
+        '{$\ln \left( \mathcal{Z} / {\mathcal{Z}_{0}}\\right)$}'],
+        column_format='''S[table-format=8,round-precision=0]
+            S[table-format=6(3),round-mode=uncertainty,round-precision=1]
+            S[table-format=6(3),round-mode=uncertainty,round-precision=1]
+            S[table-format=6(3),round-mode=uncertainty,round-precision=1]
+            S[table-format=1(1),round-mode=uncertainty,round-precision=1]
+            S[table-format=1(1),round-mode=uncertainty,round-precision=1]''',
         escape=False))
 
 # put table in standalone tex document
@@ -312,36 +313,47 @@ with open("Results/" + str(filename) + ".tex", "w") as tex_file:
 
 \end{document}""")
 
-plt.figure()
+plt.figure(figsize=(6.4,6))
 
 #  plot fitted to CMB Bayes factors
 plt.errorbar(
     unique_points,
     bayes_cmb_fitted,
     yerr=bayes_cmb_fitted_error,
-    label=r'$\ln ( \mathcal{Z} / {\mathcal{Z}_{CMB}} )$',
+    label=r'$\ln B_{12} = \ln ( \mathcal{Z} / {\mathcal{Z}_{CMB}} )$',
     capsize=4,
     markersize=4,
     lw=1,
-    fmt='o')
+    fmt='o',
+    c='#eb811b') # met orange
 
 # plot fitted to null Bayes factors
 plt.errorbar(
     unique_points,
     bayes_fitted_null,
     yerr=bayes_fitted_null_error,
-    label=r'$\ln ( \mathcal{Z} / \mathcal{Z}_0 )$',
+    label=r'$\ln B_{10} = \ln ( \mathcal{Z} / \mathcal{Z}_0 )$',
     capsize=4,
     markersize=4,
     lw=1,
-    fmt='o')
+    fmt='o',
+    c='#23373b') # met blue
 
-plt.xlabel('Number of Points')
-plt.ylabel('Log Bayes Factor')
+plt.xlabel('Number of Points',fontsize=18)
+plt.ylabel('Log Bayes Factor',fontsize=18)
 plt.grid(True)
-plt.legend()
-plt.title('Table ' + test_index + ' Bayes Factors')
-plt.savefig('Results/' + 'table-' + test_index + '-plot.pdf')
+plt.legend(fontsize=14)
+plt.title(title,fontsize=18)
+plt.ticklabel_format(useMathText=True)
+
+ax = plt.gca()
+fig = plt.gcf()
+
+ax.xaxis.set_major_formatter(OOMFormatter(6, "%1.1f"))
+
+ax.tick_params(labelsize=14)
+ax.xaxis.offsetText.set_fontsize(14)
+plt.savefig('Results/' + 'table-' + test_index + '-plot.pdf',bbox_inches='tight')
 
 plt.show()
 
