@@ -49,7 +49,7 @@ if test_index == 'A':
     for i in range(1,21):
         test_files.append('Results/27-09/evidences-trials' + str(i) + 'sigma0.1.csv')
     
-    title = r'Bayes factors: $\Delta \tau_0 = 10 \%; (\theta, \phi) = (0.7,4)$'
+    title = r'Bayes factors for $\Delta \tau_0 = 10 \%$ and $v = 0.001c$'
 
 elif test_index == 'B':
     # RESULTS2 (np.pi/2, 4), 10% uncertainty
@@ -166,6 +166,29 @@ elif test_index == 'K':
         test_files.append('Results/23-10/evidences-trials{}sigma0.3.csv'.format(str(i)))
 
     title = r'Bayes factors: $\Delta \tau_0 = 30 \%; (\theta, \phi) = (0.7,4)$'
+
+elif test_index == 'L':
+
+    test_files = []
+    for i in range(1, 20):
+        test_files.append(
+            'Results/29-12/evidences-trials{}sigma0.3.csv'.format(str(i)))
+
+    for i in range(20,33):
+        test_files.append(
+            'Results/2-1/evidences-trials{}sigma0.3.csv'.format(str(i))
+        )
+
+    title = r'Bayes factors for $\Delta \tau_0 = 30 \%$ and $v=0.001c$'
+
+elif test_index == 'M':
+
+    test_files = []
+    for i in range(1, 21):
+        test_files.append(
+            'Results/30-12/evidences-trials{}sigma0.3.csv'.format(str(i)))
+
+    title = r'Bayes factors for $\Delta \tau_0 = 30 \%$ and $v = 0.0024c$'
 
 ##### COMPUTE BAYES FACTORS #######
 # Read in csv filed containing evidences and combine into a dataframe
@@ -320,7 +343,8 @@ plt.errorbar(
     unique_points,
     bayes_cmb_fitted,
     yerr=bayes_cmb_fitted_error,
-    label=r'$\ln B_{12} = \ln ( \mathcal{Z} / {\mathcal{Z}_{CMB}} )$',
+    # label=r'$\ln B_{12} = \ln ( \mathcal{Z} / {\mathcal{Z}_{CMB}} )$',
+    label=r'$\ln B_{12}$',
     capsize=4,
     markersize=4,
     lw=1,
@@ -332,7 +356,8 @@ plt.errorbar(
     unique_points,
     bayes_fitted_null,
     yerr=bayes_fitted_null_error,
-    label=r'$\ln B_{10} = \ln ( \mathcal{Z} / \mathcal{Z}_0 )$',
+    # label=r'$\ln B_{10} = \ln ( \mathcal{Z} / \mathcal{Z}_0 )$',
+    label=r'$\ln B_{10}$',
     capsize=4,
     markersize=4,
     lw=1,

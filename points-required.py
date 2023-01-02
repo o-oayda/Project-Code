@@ -48,14 +48,14 @@ obsPolar = (0.7,4)
 sigma_range = [0.3] # intrinsic uncertainty for each time-scale
 nside = 16 # defines pixel density upon pixelisation
 points_range = np.linspace(10**6,2*10**7,num=20).astype(int) # range of points
-trials = range(1,10) # number of trials to run for
+trials = range(20,41) # number of trials to run for
 
 #### Defining other variables
 restLambda = ang_freq_to_lambda(1)  # define ang_freq to be 1.
 observerVector = sph2cart(obsPolar)
 observerVector2 = np.asarray([observerVector])
 pol_true, az_true = obsPolar
-v_true = obsSpeed
+v_true = obsSpeed 
 
 #### Now determine evidences over a range of points
 for sigma in sigma_range:
@@ -101,7 +101,7 @@ for sigma in sigma_range:
                     
                     # actual measured time-scales in observer frame
                     tau_new = tau_dilated + tau_error  
-                    tau_uncertainties = 0.1*np.ones(len(tau_new)) # uncertainty assumed to be 10%
+                    tau_uncertainties = sigma*np.ones(len(tau_new)) # uncertainty assumed to be 10% NO
 
                     print('Averaging points...')
                     # Create pixels and average time-scales with pixelAverage function
