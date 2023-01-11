@@ -49,7 +49,8 @@ if test_index == 'A':
     for i in range(1,21):
         test_files.append('Results/27-09/evidences-trials' + str(i) + 'sigma0.1.csv')
     
-    title = r'Bayes factors for $\Delta \tau_0 = 10 \%$ and $v = 0.001c$'
+    # title = r'Bayes factors for $\Delta \tau_0 = 10 \%$ and $v = 0.001c$' + '\n' +  r'$30^\circ$ off-alignment with CMB'
+    title = r'Bayes factors for $\Delta \tau_0 = 10 \%$ and $v = 0.001c$ (unaligned)'
 
 elif test_index == 'B':
     # RESULTS2 (np.pi/2, 4), 10% uncertainty
@@ -179,7 +180,7 @@ elif test_index == 'L':
             'Results/2-1/evidences-trials{}sigma0.3.csv'.format(str(i))
         )
 
-    title = r'Bayes factors for $\Delta \tau_0 = 30 \%$ and $v=0.001c$'
+    title = r'Bayes factors for $\Delta \tau_0 = 30 \%$ and $v=0.001c$ (unaligned)'
 
 elif test_index == 'M':
 
@@ -188,7 +189,19 @@ elif test_index == 'M':
         test_files.append(
             'Results/30-12/evidences-trials{}sigma0.3.csv'.format(str(i)))
 
-    title = r'Bayes factors for $\Delta \tau_0 = 30 \%$ and $v = 0.0024c$'
+    title = r'Bayes factors for $\Delta \tau_0 = 30 \%$ and $v = 0.0024c$ (unaligned)'
+
+elif test_index == 'N':
+    # aligned with CMB
+    # sigma 0.3
+    # v = 0.0024c
+    test_files = []
+    for i in range(1,21):
+        test_files.append(
+            'Results/9-01/evidences-trials{}sigma0.3.csv'.format(str(i))
+        )
+    
+    title = r'Bayes factors for $\Delta \tau_0 = 30 \%$ and $v = 0.0024c$ (aligned)'
 
 ##### COMPUTE BAYES FACTORS #######
 # Read in csv filed containing evidences and combine into a dataframe
@@ -344,7 +357,7 @@ plt.errorbar(
     bayes_cmb_fitted,
     yerr=bayes_cmb_fitted_error,
     # label=r'$\ln B_{12} = \ln ( \mathcal{Z} / {\mathcal{Z}_{CMB}} )$',
-    label=r'$\ln B_{12}$',
+    label=r'$\ln B_{12}$ (fitted vs.\! CMB hypothesis)',
     capsize=4,
     markersize=4,
     lw=1,
@@ -357,14 +370,14 @@ plt.errorbar(
     bayes_fitted_null,
     yerr=bayes_fitted_null_error,
     # label=r'$\ln B_{10} = \ln ( \mathcal{Z} / \mathcal{Z}_0 )$',
-    label=r'$\ln B_{10}$',
+    label=r'$\ln B_{10}$ (fitted vs.\! null hypothesis)',
     capsize=4,
     markersize=4,
     lw=1,
     fmt='o',
     c='#23373b') # met blue
 
-plt.xlabel('Number of Points',fontsize=18)
+plt.xlabel('Number of Sources',fontsize=18)
 plt.ylabel('Log Bayes Factor',fontsize=18)
 plt.grid(True)
 plt.legend(fontsize=14)

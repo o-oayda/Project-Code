@@ -43,12 +43,13 @@ t0 = time.time()
 newDir = input('Enter directory name: ')
 
 #### Key variables
-obsSpeed = 0.001
-obsPolar = (0.7,4)
+obsSpeed = 0.0024 # speed still 2x CMB speed
+# obsPolar = (0.7,4)
+obsPolar = (np.pi/2 - (48.253*np.pi/180), 264.021 * np.pi/180) # align with CMB direction
 sigma_range = [0.3] # intrinsic uncertainty for each time-scale
 nside = 16 # defines pixel density upon pixelisation
 points_range = np.linspace(10**6,2*10**7,num=20).astype(int) # range of points
-trials = range(20,41) # number of trials to run for
+trials = range(13,21) # number of trials to run for
 
 #### Defining other variables
 restLambda = ang_freq_to_lambda(1)  # define ang_freq to be 1.
